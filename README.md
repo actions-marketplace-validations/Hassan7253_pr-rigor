@@ -190,3 +190,6 @@ Real-world fixtures, language presets, clearer recovery guidance, and false-posi
 ## License
 
 MIT
+
+## Maintainer note
+PR Rigor is actively maintained, tested on its own pull requests, and open to community feedback.
