@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Hassan7253/pr-rigor/blob/main/schemas/pr-rigor.schema.json",
+  "title": "PR Rigor configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "preset": { "enum": ["balanced", "strict", "library", "docs"] },
+    "skipDrafts": { "type": "boolean" },
+    "skipLabels": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "waiverLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" },
+        "uniqueItems": true
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "warn": { "type": "number", "minimum": 0 },
+        "fail": { "type": "number", "minimum": 0 }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "level": { "enum": ["off", "info", "warn", "fail"] },
+          "weight": { "type": "number", "minimum": 0 },
+          "minLength": { "type": "number", "minimum": 0 },
+          "max": { "type": "number", "minimum": 0 },
+          "failAt": { "type": "number", "minimum": 0 },
+          "minRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "minCodeLines": { "type": "number", "minimum": 0 },
+          "ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "minFiles": { "type": "number", "minimum": 0 },
+          "sections": { "type": "array", "items": { "type": "string" } },
+          "exemptOwners": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["level"]
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  }
+}

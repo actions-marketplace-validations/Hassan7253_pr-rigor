@@ -1,0 +1,55 @@
+{
+  "name": "@hassan7253/pr-rigor",
+  "version": "1.0.0",
+  "description": "Deterministic pull-request readiness and supply-chain checks for open-source maintainers.",
+  "type": "module",
+  "bin": {
+    "pr-rigor": "./bin/pr-rigor.js"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./config": "./src/config.js",
+    "./render": "./src/render.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage",
+    "demo": "node ./bin/pr-rigor.js analyze --event examples/event.json --files examples/files.json --format markdown --no-exit-code",
+    "demo:sarif": "node ./bin/pr-rigor.js analyze --event examples/event.json --files examples/files.json --format sarif --output examples/generated-report.sarif --no-exit-code",
+    "check": "node ./scripts/check-syntax.mjs && npm test && npm run demo -- --output examples/generated-report.md && npm run demo:sarif",
+    "customize": "node ./scripts/customize.mjs",
+    "prepack": "npm run check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "github-actions",
+    "pull-request",
+    "open-source",
+    "maintainer",
+    "code-review",
+    "supply-chain",
+    "sarif",
+    "triage"
+  ],
+  "license": "MIT",
+  "author": "Hassan7253",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hassan7253/pr-rigor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hassan7253/pr-rigor/issues"
+  },
+  "homepage": "https://github.com/Hassan7253/pr-rigor#readme",
+  "files": [
+    "bin",
+    "src",
+    "schemas",
+    "action.yml",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ]
+}

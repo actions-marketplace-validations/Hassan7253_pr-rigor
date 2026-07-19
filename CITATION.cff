@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: PR Rigor
+message: "If PR Rigor supports your research or software-maintenance work, cite the software release."
+type: software
+authors:
+  - name: Hassan7253
+version: 1.0.0
+date-released: 2026-07-19
+repository-code: "https://github.com/Hassan7253/pr-rigor"
+license: MIT

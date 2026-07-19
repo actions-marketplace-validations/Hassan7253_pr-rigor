@@ -1,0 +1,32 @@
+name: Feature proposal
+description: Propose a scoped improvement
+title: "feature: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Maintainer problem
+      description: Describe the repeated review work this would reduce.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Observable evidence
+      description: What deterministic input can the feature inspect?
+    validations:
+      required: true
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Contributor recovery step
+      description: What should a contributor do after the finding?
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: False-positive and security boundaries
+    validations:
+      required: true

@@ -1,0 +1,57 @@
+name: PR Rigor
+description: Deterministic PR readiness, security-sensitive change, and supply-chain checks for maintainers.
+author: Hassan7253
+branding:
+  icon: shield
+  color: purple
+inputs:
+  token:
+    description: GitHub token used to read PR metadata and optionally post a comment.
+    required: false
+    default: ""
+  config:
+    description: Path to a JSON configuration file in the base branch.
+    required: false
+    default: .pr-rigor.json
+  config-json:
+    description: Inline JSON configuration. Takes precedence over the config file.
+    required: false
+    default: ""
+  preset:
+    description: "Optional preset override: balanced, strict, library, or docs."
+    required: false
+    default: ""
+  comment:
+    description: Post or update a single PR summary comment.
+    required: false
+    default: "true"
+  summary:
+    description: Add the report to the GitHub Actions step summary.
+    required: false
+    default: "true"
+  annotations:
+    description: Emit workflow annotations for file-based findings.
+    required: false
+    default: "true"
+  fail-on-error:
+    description: Fail the workflow when a blocking finding is present.
+    required: false
+    default: "true"
+  sarif-output:
+    description: Optional path for a SARIF 2.1.0 report.
+    required: false
+    default: ""
+outputs:
+  status:
+    description: pass, warn, fail, or skipped
+  score:
+    description: Readiness score from 0 to 100
+  findings:
+    description: Number of non-waived findings
+  report:
+    description: Markdown report
+  sarif:
+    description: SARIF output path when requested
+runs:
+  using: node24
+  main: src/action.js

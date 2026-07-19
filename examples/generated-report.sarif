@@ -1,0 +1,418 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "PR Rigor",
+          "version": "1.0.0",
+          "informationUri": "https://github.com/Hassan7253/pr-rigor",
+          "rules": [
+            {
+              "id": "unchecked-tasks",
+              "name": "unchecked_tasks",
+              "shortDescription": {
+                "text": "PR checklist is incomplete"
+              },
+              "fullDescription": {
+                "text": "1 unchecked checklist item remains."
+              },
+              "help": {
+                "text": "Complete the checklist or explain why an item does not apply."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Description",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "missing-tests",
+              "name": "missing_tests",
+              "shortDescription": {
+                "text": "Code changed without test changes"
+              },
+              "fullDescription": {
+                "text": "1 source file changed and no test file changed."
+              },
+              "help": {
+                "text": "Add focused tests or explain why existing coverage is sufficient."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Testing",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "missing-changelog",
+              "name": "missing_changelog",
+              "shortDescription": {
+                "text": "No changelog entry detected"
+              },
+              "fullDescription": {
+                "text": "Source code changed but no configured changelog or changeset path changed."
+              },
+              "help": {
+                "text": "Add a release note or mark the change as internal through a maintainer-controlled waiver label."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Release",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "dependency-change",
+              "name": "dependency_change",
+              "shortDescription": {
+                "text": "Dependency surface changed"
+              },
+              "fullDescription": {
+                "text": "1 dependency manifest changed."
+              },
+              "help": {
+                "text": "Review install scripts, version ranges, licenses, lockfiles, and supply-chain impact."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Supply chain",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "manifest-without-lockfile",
+              "name": "manifest_without_lockfile",
+              "shortDescription": {
+                "text": "Manifest changed without lockfile"
+              },
+              "fullDescription": {
+                "text": "A dependency manifest changed without a detected lockfile update."
+              },
+              "help": {
+                "text": "Confirm that the repository intentionally does not commit a lockfile, or update it."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "category": "Supply chain",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "sensitive-change",
+              "name": "sensitive_change",
+              "shortDescription": {
+                "text": "Sensitive paths changed"
+              },
+              "fullDescription": {
+                "text": "2 security-sensitive paths changed."
+              },
+              "help": {
+                "text": "Request an owner familiar with authentication, permissions, workflows, or deployment risk."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Security",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "workflow-permissions",
+              "name": "workflow_permissions",
+              "shortDescription": {
+                "text": "Broad workflow permissions added"
+              },
+              "fullDescription": {
+                "text": "New broad GitHub Actions write permissions were detected."
+              },
+              "help": {
+                "text": "Use the narrowest job-level permissions and document why each write permission is needed."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "category": "Security",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "migration-change",
+              "name": "migration_change",
+              "shortDescription": {
+                "text": "Migration or schema changed"
+              },
+              "fullDescription": {
+                "text": "1 migration or schema file changed."
+              },
+              "help": {
+                "text": "Document rollback, compatibility, data volume, and deployment ordering."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Operations",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            },
+            {
+              "id": "unpinned-action",
+              "name": "unpinned_action",
+              "shortDescription": {
+                "text": "Third-party Action is not SHA-pinned"
+              },
+              "fullDescription": {
+                "text": "1 newly added third-party Action reference is not pinned to a full commit SHA."
+              },
+              "help": {
+                "text": "Pin third-party Actions to a reviewed 40-character commit SHA and retain a version comment."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "category": "Supply chain",
+                "tags": [
+                  "maintainability",
+                  "pull-request"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "unchecked-tasks",
+          "level": "warning",
+          "message": {
+            "text": "1 unchecked checklist item remains. Next step: Complete the checklist or explain why an item does not apply."
+          },
+          "locations": [],
+          "properties": {
+            "category": "Description",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "missing-tests",
+          "level": "warning",
+          "message": {
+            "text": "1 source file changed and no test file changed. Next step: Add focused tests or explain why existing coverage is sufficient."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/release.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Testing",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "missing-changelog",
+          "level": "warning",
+          "message": {
+            "text": "Source code changed but no configured changelog or changeset path changed. Next step: Add a release note or mark the change as internal through a maintainer-controlled waiver label."
+          },
+          "locations": [],
+          "properties": {
+            "category": "Release",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "dependency-change",
+          "level": "warning",
+          "message": {
+            "text": "1 dependency manifest changed. Next step: Review install scripts, version ranges, licenses, lockfiles, and supply-chain impact."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Supply chain",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "manifest-without-lockfile",
+          "level": "note",
+          "message": {
+            "text": "A dependency manifest changed without a detected lockfile update. Next step: Confirm that the repository intentionally does not commit a lockfile, or update it."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Supply chain",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "sensitive-change",
+          "level": "warning",
+          "message": {
+            "text": "2 security-sensitive paths changed. Next step: Request an owner familiar with authentication, permissions, workflows, or deployment risk."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/release.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Security",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "workflow-permissions",
+          "level": "error",
+          "message": {
+            "text": "New broad GitHub Actions write permissions were detected. Next step: Use the narrowest job-level permissions and document why each write permission is needed."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/release.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Security",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "migration-change",
+          "level": "warning",
+          "message": {
+            "text": "1 migration or schema file changed. Next step: Document rollback, compatibility, data volume, and deployment ordering."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "db/migrations/20260719_add_release.sql",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Operations",
+            "readinessScore": 29
+          }
+        },
+        {
+          "ruleId": "unpinned-action",
+          "level": "warning",
+          "message": {
+            "text": "1 newly added third-party Action reference is not pinned to a full commit SHA. Next step: Pin third-party Actions to a reviewed 40-character commit SHA and retain a version comment."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/release.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "category": "Supply chain",
+            "readinessScore": 29
+          }
+        }
+      ]
+    }
+  ]
+}

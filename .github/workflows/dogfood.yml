@@ -1,0 +1,28 @@
+name: Dogfood PR Rigor
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run the Action from this pull request
+        uses: ./
+        with:
+          token: ${{ github.token }}
+          comment: "false"
+          fail-on-error: "true"
+          sarif-output: pr-rigor.sarif
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: pr-rigor-sarif
+          path: pr-rigor.sarif
+          if-no-files-found: ignore

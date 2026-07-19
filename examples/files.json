@@ -1,0 +1,30 @@
+[
+  {
+    "filename": "src/release.js",
+    "status": "modified",
+    "additions": 190,
+    "deletions": 25,
+    "patch": "@@ -1,2 +1,4 @@\n+export function publishRelease() {\n+  return true;\n+}"
+  },
+  {
+    "filename": "package.json",
+    "status": "modified",
+    "additions": 4,
+    "deletions": 2,
+    "patch": "@@ -4,2 +4,2 @@\n+    \"left-pad\": \"^1.3.0\""
+  },
+  {
+    "filename": ".github/workflows/release.yml",
+    "status": "modified",
+    "additions": 12,
+    "deletions": 1,
+    "patch": "@@ -1,2 +1,8 @@\n+permissions: write-all\n+steps:\n+  - uses: some-vendor/publish-action@main"
+  },
+  {
+    "filename": "db/migrations/20260719_add_release.sql",
+    "status": "added",
+    "additions": 8,
+    "deletions": 0,
+    "patch": "@@ -0,0 +1,2 @@\n+ALTER TABLE releases ADD COLUMN channel text;"
+  }
+]

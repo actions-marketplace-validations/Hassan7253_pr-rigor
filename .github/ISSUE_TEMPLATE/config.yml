@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage and configuration question
+    url: https://github.com/Hassan7253/pr-rigor/discussions
+    about: Ask in Discussions instead of opening a bug.
+  - name: Security vulnerability
+    url: https://github.com/Hassan7253/pr-rigor/security/advisories/new
+    about: Report vulnerabilities privately.

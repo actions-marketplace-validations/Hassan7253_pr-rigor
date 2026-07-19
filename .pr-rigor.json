@@ -1,0 +1,17 @@
+{
+  "$schema": "./schemas/pr-rigor.schema.json",
+  "preset": "library",
+  "skipDrafts": false,
+  "skipLabels": ["pr-rigor:skip"],
+  "rules": {
+    "required-sections": {
+      "level": "warn",
+      "sections": ["Summary", "Testing"]
+    },
+    "missing-issue-link": { "level": "warn" },
+    "missing-changelog": { "level": "warn" }
+  },
+  "paths": {
+    "ignore": ["docs/generated/**"]
+  }
+}
