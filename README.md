@@ -16,7 +16,7 @@ Linters answer “does this code follow a rule?” PR Rigor answers “is this c
 
 ## Highlights
 
-- 26 deterministic checks across reviewability, testing, security, supply chain, release readiness, and compatibility
+- 27 deterministic checks across reviewability, testing, security, supply chain, release readiness, and compatibility
 - One stable GitHub comment that is updated instead of duplicated
 - GitHub step summary and file annotations
 - SARIF 2.1.0 output for code-scanning integrations
@@ -24,6 +24,7 @@ Linters answer “does this code follow a rule?” PR Rigor answers “is this c
 - Four presets: `balanced`, `strict`, `library`, and `docs`
 - Maintainer-controlled waiver and skip labels
 - Configuration loaded from the trusted base commit
+- Blocking detection for unsafe `pull_request_target` checkout of pull-request-controlled code
 - Zero runtime dependencies on Node.js 20+
 - No telemetry, contributor profiling, or external AI service
 

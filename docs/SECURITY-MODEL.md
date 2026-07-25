@@ -16,6 +16,8 @@ PR Rigor's recommended job:
 
 Never add a step to the same `pull_request_target` job that checks out and executes the fork's head commit. Put builds and tests in a separate `pull_request` workflow with a read-only token.
 
+PR Rigor's `unsafe-pr-target-checkout` rule blocks newly introduced combinations it can see in the workflow patch, including explicit pull-request head refs, `allow-unsafe-pr-checkout: true`, and common shell checkout commands. This is defense in depth, not a substitute for reviewing the full workflow and its called actions.
+
 ## Data flow
 
 The Action sends requests only to the GitHub API selected by the repository event. It does not send source code, patches, filenames, or contributor information to a model or analytics service.

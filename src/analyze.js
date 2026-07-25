@@ -55,6 +55,13 @@ function addedLines(patch) {
     .map((line) => line.slice(1));
 }
 
+function visiblePatchLines(patch) {
+  return String(patch || '')
+    .split('\n')
+    .filter((line) => line && !line.startsWith('@@') && !line.startsWith('---') && !line.startsWith('+++') && !line.startsWith('-') && !line.startsWith('\\'))
+    .map((line) => line.startsWith('+') || line.startsWith(' ') ? line.slice(1) : line);
+}
+
 function headings(body) {
   return [...String(body || '').matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gim)]
     .map((match) => match[1].trim().toLowerCase());
@@ -147,6 +154,48 @@ function findUnpinnedActions(files, exemptOwners) {
         findings.push({ path: file.filename, message: `${match[1]}@${ref}` });
       }
     }
+  }
+  return findings;
+}
+
+function findUnsafePullRequestTargetCheckouts(files) {
+  const findings = [];
+  const targetTrigger = /(?:^|[\s[,])['"]?pull_request_target['"]?(?:\s*:|\s*(?:,|\])|\s*$)/i;
+  const checkoutAction = /^\s*-?\s*uses:\s*actions\/checkout@/i;
+  const unsafeCheckoutInput = /^\s*allow-unsafe-pr-checkout\s*:\s*(?:true|['"]true['"])\s*(?:#.*)?$/i;
+  const pullRequestHeadInput = /^\s*(?:ref|repository)\s*:\s*.*(?:github\.head_ref|github\.event\.pull_request\.head(?:\.(?:sha|ref|repo\.full_name))?|refs\/pull\/.*\/(?:head|merge))/i;
+  const ghCheckout = /\bgh\s+pr\s+checkout\b/i;
+  const gitCheckout = /\bgit\s+(?:fetch|checkout|switch)\b.*(?:github\.head_ref|github\.event\.pull_request\.head|refs\/pull\/.*\/(?:head|merge))/i;
+
+  for (const file of files) {
+    const visible = visiblePatchLines(file.patch).filter((line) => !line.trimStart().startsWith('#'));
+    const added = addedLines(file.patch).filter((line) => !line.trimStart().startsWith('#'));
+    if (!visible.some((line) => targetTrigger.test(line))) continue;
+
+    const hasCheckoutAction = visible.some((line) => checkoutAction.test(line));
+    const hasUnsafeInput = visible.some((line) => unsafeCheckoutInput.test(line));
+    const hasPullRequestHeadInput = visible.some((line) => pullRequestHeadInput.test(line));
+    const hasGhCheckout = visible.some((line) => ghCheckout.test(line));
+    const hasGitCheckout = visible.some((line) => gitCheckout.test(line));
+    const dangerous = (hasCheckoutAction && (hasUnsafeInput || hasPullRequestHeadInput)) || hasGhCheckout || hasGitCheckout;
+    if (!dangerous) continue;
+
+    const combinationIntroduced = added.some((line) => targetTrigger.test(line)
+      || checkoutAction.test(line)
+      || unsafeCheckoutInput.test(line)
+      || pullRequestHeadInput.test(line)
+      || ghCheckout.test(line)
+      || gitCheckout.test(line));
+    if (!combinationIntroduced) continue;
+
+    const reasons = [];
+    if (hasUnsafeInput) reasons.push('unsafe checkout protection explicitly disabled');
+    if (hasPullRequestHeadInput) reasons.push('checkout points at pull-request-controlled code');
+    if (hasGhCheckout || hasGitCheckout) reasons.push('shell command checks out pull-request-controlled code');
+    findings.push({
+      path: file.filename,
+      message: `pull_request_target combined with untrusted checkout: ${reasons.join('; ')}`
+    });
   }
   return findings;
 }
@@ -276,6 +325,15 @@ export function analyzePullRequest(input, userConfig = {}, presetOverride = '') 
   const permissionRisks = findWorkflowPermissionRisks(groups.workflow);
   if (permissionRisks.length) {
     add(createFinding(config, 'workflow-permissions', 'New broad GitHub Actions write permissions were detected.', permissionRisks, 'Use the narrowest job-level permissions and document why each write permission is needed.'));
+  }
+
+  const unsafeTargetCheckouts = findUnsafePullRequestTargetCheckouts(groups.workflow);
+  if (unsafeTargetCheckouts.length) {
+    add(createFinding(config, 'unsafe-pr-target-checkout', unsafeTargetCheckouts.length === 1
+      ? 'A pull_request_target workflow appears to check out pull-request-controlled code.'
+      : `${unsafeTargetCheckouts.length} pull_request_target workflows appear to check out pull-request-controlled code.`,
+    unsafeTargetCheckouts,
+    'Do not execute fork code in pull_request_target. Keep privileged metadata/comment work there, and run builds in a separate pull_request workflow with a read-only token.'));
   }
 
   if (groups.credential.length) {

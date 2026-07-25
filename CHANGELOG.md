@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `unsafe-pr-target-checkout` blocking rule for privileged workflows that introduce checkout of pull-request-controlled code
+- Regression coverage for safe metadata-only workflows, explicit PR-head refs, checkout v7's unsafe opt-out, and removed-risk diffs
+
+### Documentation
+
+- Expanded the rule reference and security model with detection scope, limitations, and the safe split-workflow pattern
+
 ## 1.0.0 - 2026-07-19
 
 ### Added
