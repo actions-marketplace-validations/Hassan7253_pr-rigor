@@ -42,9 +42,12 @@ Official `actions/*` and `github/*` owners are exempt from `unpinned-action` by 
 
 - `sensitive-change`: a configured sensitive path changed.
 - `workflow-permissions`: newly added broad write permissions in a workflow patch.
+- `unsafe-pr-target-checkout`: a `pull_request_target` workflow introduces checkout of pull-request-controlled code.
 - `credential-file`: a likely credential or private-key path changed.
 - `secret-pattern`: a small set of high-confidence secret patterns appeared in added lines. Values are never printed.
 - `migration-change`: database or schema migration paths changed.
 - `public-api-change`: likely public API paths changed.
+
+The unsafe-checkout rule inspects the changed workflow patch. It recognizes explicit pull-request head refs, `allow-unsafe-pr-checkout: true`, and common `gh pr checkout` or `git` checkout commands when the `pull_request_target` trigger is visible in the patch. It does not parse arbitrary shell scripts or replace dedicated workflow security analysis.
 
 PR Rigor is not a secret scanner, dependency auditor, SAST engine, or migration verifier. These checks identify where a specialist review may be needed.
