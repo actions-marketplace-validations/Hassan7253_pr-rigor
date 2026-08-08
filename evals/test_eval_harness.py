@@ -1,6 +1,8 @@
 import importlib.util
 import unittest
 import sys
+import json
+import tempfile
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("run_evals.py")
@@ -24,6 +26,19 @@ class EvalHarnessTests(unittest.TestCase):
 
     def test_percentile_interpolates(self):
         self.assertAlmostEqual(module.percentile([1.0, 3.0], 0.5), 2.0)
+
+    def test_benchmark_manifest_loads_jsonl_shards_in_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "cases").mkdir()
+            case_a = {"id": "a", "input": {}, "expected": {"findingIds": [], "status": "pass"}}
+            case_b = {"id": "b", "input": {}, "expected": {"findingIds": [], "status": "pass"}}
+            (root / "cases" / "a.jsonl").write_text(json.dumps(case_a) + "\n", encoding="utf-8")
+            (root / "cases" / "b.jsonl").write_text(json.dumps(case_b) + "\n", encoding="utf-8")
+            manifest = root / "benchmark.json"
+            manifest.write_text(json.dumps({"schemaVersion": 1, "caseFiles": ["cases/a.jsonl", "cases/b.jsonl"]}), encoding="utf-8")
+            loaded = module.load_benchmark(manifest)
+            self.assertEqual([case["id"] for case in loaded["cases"]], ["a", "b"])
 
     def test_benchmark_validation_rejects_duplicate_ids(self):
         doc = {

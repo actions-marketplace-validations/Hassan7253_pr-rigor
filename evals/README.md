@@ -4,6 +4,13 @@ PR Rigor Eval Lab is a small, dependency-free evaluation system for measuring th
 
 It exists for a different reason than the unit tests. Unit tests verify individual implementation behavior. The eval corpus asks a system-level question: across a deliberately mixed set of positive, negative, boundary, configuration, and multi-signal scenarios, how often does PR Rigor emit exactly the findings the benchmark expects?
 
+## Corpus layout
+
+`benchmark.json` is a manifest over small JSONL shards in `evals/cases/`. Each labeled
+scenario occupies one record, which keeps benchmark diffs atomic and reviewable while
+remaining easy to stream or shard. The harness rebuilds the canonical benchmark object
+before hashing it, so this storage layout preserves the reviewed baseline hash exactly.
+
 ## What it measures
 
 The current corpus contains 71 human-labeled scenarios covering description quality, test signals, scope, supply-chain changes, GitHub Actions security, credential and secret detection, migrations, public API changes, generated artifacts, binary files, waivers, presets, and negative controls.

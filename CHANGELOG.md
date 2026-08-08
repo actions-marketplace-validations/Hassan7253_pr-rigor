@@ -16,6 +16,12 @@
 - `unsafe-pr-target-checkout` blocking rule for privileged workflows that introduce checkout of pull-request-controlled code
 - Regression coverage for safe metadata-only workflows, explicit PR-head refs, checkout v7's unsafe opt-out, and removed-risk diffs
 
+### Changed
+
+- Store labeled evaluation cases as atomic JSONL records behind a small manifest after self-dogfooding exposed that the original monolithic benchmark was unnecessarily hard to review.
+- Split report rendering from the evaluation runner so the harness remains modular and reviewable.
+- Recognize Python's conventional `test_*.py` naming as test evidence, with regression coverage.
+
 ### Documentation
 
 - Added an Eval Lab methodology and limitations document, including explicit language that synthetic benchmark performance is not real-world accuracy

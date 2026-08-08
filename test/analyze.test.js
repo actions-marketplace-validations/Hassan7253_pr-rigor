@@ -35,6 +35,17 @@ test('docs-only changes do not trigger test rules', () => {
   assert.equal(ids(report).includes('missing-tests'), false);
 });
 
+test('Python test_ files count as test changes', () => {
+  const report = analyzePullRequest({
+    pullRequest: healthy,
+    files: [
+      { filename: 'src/retry.py', additions: 20 },
+      { filename: 'evals/test_retry.py', additions: 25 }
+    ]
+  });
+  assert.equal(ids(report).includes('missing-tests'), false);
+});
+
 test('strict preset requires headings, issue links, and changelog', () => {
   const report = analyzePullRequest({
     pullRequest: { title: 'Improve parser compatibility', body: 'A detailed explanation without headings or an issue link.', labels: [] },
