@@ -4,7 +4,7 @@ message: "If PR Rigor supports your research or software-maintenance work, cite 
 type: software
 authors:
   - name: Hassan7253
-version: 1.0.0
-date-released: 2026-07-19
+version: 1.1.0
+date-released: 2026-08-07
 repository-code: "https://github.com/Hassan7253/pr-rigor"
 license: MIT

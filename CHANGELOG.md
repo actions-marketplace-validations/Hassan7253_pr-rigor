@@ -2,13 +2,23 @@
 
 ## Unreleased
 
+## 1.1.0 - 2026-08-07
+
 ### Added
 
+- Python Eval Lab with 71 human-labeled synthetic pull-request scenarios and a dependency-free Node bridge to the production analyzer
+- Precision, recall, F1, exact finding-set accuracy, status accuracy, per-rule metrics, tagged slice metrics, and latency summaries
+- Corpus-hash-bound regression baseline so fixture/label changes require explicit review before a new baseline is accepted
+- Static Markdown, JSON, and HTML evaluation reports with diagnostic separation for analyzer, data, harness, infrastructure, and baseline failures
+- Deterministic eval sharding plus a four-shard GitHub Actions workflow that aggregates complete-corpus results and gates regressions
+- Unit tests for the Python evaluation harness
+- CodeQL analysis for both JavaScript/TypeScript and the new Python evaluation infrastructure
 - `unsafe-pr-target-checkout` blocking rule for privileged workflows that introduce checkout of pull-request-controlled code
 - Regression coverage for safe metadata-only workflows, explicit PR-head refs, checkout v7's unsafe opt-out, and removed-risk diffs
 
 ### Documentation
 
+- Added an Eval Lab methodology and limitations document, including explicit language that synthetic benchmark performance is not real-world accuracy
 - Expanded the rule reference and security model with detection scope, limitations, and the safe split-workflow pattern
 
 ## 1.0.0 - 2026-07-19

@@ -13,7 +13,7 @@ async function walk(directory) {
   return files;
 }
 
-const files = [...await walk('src'), ...await walk('bin'), ...await walk('scripts')];
+const files = [...await walk('src'), ...await walk('bin'), ...await walk('scripts'), ...await walk('evals')];
 for (const file of files) {
   const result = spawnSync(process.execPath, ['--check', file], { stdio: 'inherit' });
   if (result.status !== 0) process.exit(result.status || 1);

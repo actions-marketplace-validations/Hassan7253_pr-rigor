@@ -384,7 +384,7 @@ export function analyzePullRequest(input, userConfig = {}, presetOverride = '') 
 
   return {
     schemaVersion: 1,
-    tool: { name: 'PR Rigor', version: '1.0.0' },
+    tool: { name: 'PR Rigor', version: '1.1.0' },
     status,
     score,
     labels,
@@ -410,7 +410,7 @@ export function analyzePullRequest(input, userConfig = {}, presetOverride = '') 
 function skippedReport(config, title, groups, reason, labels) {
   return {
     schemaVersion: 1,
-    tool: { name: 'PR Rigor', version: '1.0.0' },
+    tool: { name: 'PR Rigor', version: '1.1.0' },
     status: 'skipped',
     score: 100,
     labels,

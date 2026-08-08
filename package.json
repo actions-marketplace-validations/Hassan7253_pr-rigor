@@ -1,6 +1,6 @@
 {
   "name": "@hassan7253/pr-rigor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Deterministic pull-request readiness and supply-chain checks for open-source maintainers.",
   "type": "module",
   "bin": {
@@ -18,7 +18,9 @@
     "demo:sarif": "node ./bin/pr-rigor.js analyze --event examples/event.json --files examples/files.json --format sarif --output examples/generated-report.sarif --no-exit-code",
     "check": "node ./scripts/check-syntax.mjs && npm test && npm run demo -- --output examples/generated-report.md && npm run demo:sarif",
     "customize": "node ./scripts/customize.mjs",
-    "prepack": "npm run check"
+    "prepack": "npm run check",
+    "eval": "python evals/run_evals.py --fail-on-regression",
+    "eval:test": "python -m unittest evals.test_eval_harness"
   },
   "engines": {
     "node": ">=20"
