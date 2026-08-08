@@ -33,6 +33,28 @@ DEFAULT_BENCHMARK = ROOT / "evals" / "benchmark.json"
 DEFAULT_BASELINE = ROOT / "evals" / "baseline.json"
 NODE_RUNNER = ROOT / "evals" / "node_runner.mjs"
 
+# Secret fixtures use inert placeholders on disk so PR Rigor can dogfood its own
+# benchmark without treating test data as leaked credentials. The runner
+# materializes realistic-looking synthetic values only in memory immediately
+# before calling the analyzer. No real credentials are stored in the corpus.
+SECRET_FIXTURE_VALUES = {
+    "{{GITHUB_TOKEN}}": "".join(["gh", "p_", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdef", "1234567890"]),
+    "{{AWS_ACCESS_KEY}}": "".join(["AK", "IA", "ABCDEFGHIJKLMNOP"]),
+    "{{PRIVATE_KEY_HEADER}}": "".join(["-----BEGIN ", "PRIVATE ", "KEY-----"]),
+}
+
+
+def materialize_fixture_value(value: Any) -> Any:
+    if isinstance(value, str):
+        for marker, replacement in SECRET_FIXTURE_VALUES.items():
+            value = value.replace(marker, replacement)
+        return value
+    if isinstance(value, list):
+        return [materialize_fixture_value(item) for item in value]
+    if isinstance(value, dict):
+        return {key: materialize_fixture_value(item) for key, item in value.items()}
+    return value
+
 
 class EvalError(RuntimeError):
     """Base error with a machine-readable category."""
@@ -433,7 +455,8 @@ def main() -> int:
             selected = [case for index, case in enumerate(all_cases) if index % args.shard_count == args.shard_index]
             if not selected:
                 raise DataError("selected shard contains no cases")
-            node_results = run_node_cases(selected)
+            materialized = [materialize_fixture_value(case) for case in selected]
+            node_results = run_node_cases(materialized)
             joined = join_cases(selected, node_results)
             shard = {"index": args.shard_index, "count": args.shard_count}
 

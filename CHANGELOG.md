@@ -21,6 +21,7 @@
 - Store labeled evaluation cases as atomic JSONL records behind a small manifest after self-dogfooding exposed that the original monolithic benchmark was unnecessarily hard to review.
 - Split report rendering from the evaluation runner so the harness remains modular and reviewable.
 - Recognize Python's conventional `test_*.py` naming as test evidence, with regression coverage.
+- Store secret-detection eval fixtures as inert placeholders and materialize synthetic credential-shaped values only in memory, so self-dogfooding does not confuse benchmark data with leaked credentials.
 
 ### Documentation
 

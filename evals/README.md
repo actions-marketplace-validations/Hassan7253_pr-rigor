@@ -11,6 +11,10 @@ scenario occupies one record, which keeps benchmark diffs atomic and reviewable 
 remaining easy to stream or shard. The harness rebuilds the canonical benchmark object
 before hashing it, so this storage layout preserves the reviewed baseline hash exactly.
 
+## Safe secret fixtures
+
+Secret-detection scenarios are stored with inert placeholders such as `{{GITHUB_TOKEN}}` rather than credential-shaped strings. The Python harness materializes synthetic high-confidence patterns only in memory immediately before invoking the analyzer. This keeps the public benchmark auditable and dogfood-safe while still exercising the production secret detector. No real credentials are stored in the corpus.
+
 ## What it measures
 
 The current corpus contains 71 human-labeled scenarios covering description quality, test signals, scope, supply-chain changes, GitHub Actions security, credential and secret detection, migrations, public API changes, generated artifacts, binary files, waivers, presets, and negative controls.

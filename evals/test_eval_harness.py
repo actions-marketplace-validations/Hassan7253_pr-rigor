@@ -40,6 +40,22 @@ class EvalHarnessTests(unittest.TestCase):
             loaded = module.load_benchmark(manifest)
             self.assertEqual([case["id"] for case in loaded["cases"]], ["a", "b"])
 
+    def test_secret_placeholders_materialize_only_in_memory(self):
+        case = {
+            "input": {
+                "files": [
+                    {"patch": "+token={{GITHUB_TOKEN}} {{AWS_ACCESS_KEY}} {{PRIVATE_KEY_HEADER}}"}
+                ]
+            }
+        }
+        materialized = module.materialize_fixture_value(case)
+        patch = materialized["input"]["files"][0]["patch"]
+        self.assertNotIn("{{GITHUB_TOKEN}}", patch)
+        self.assertTrue(patch.startswith("+token=" + "".join(["gh", "p_"])))
+        self.assertIn("".join(["AK", "IA"]), patch)
+        self.assertIn("".join(["PRIVATE ", "KEY"]), patch)
+        self.assertIn("{{GITHUB_TOKEN}}", case["input"]["files"][0]["patch"])
+
     def test_benchmark_validation_rejects_duplicate_ids(self):
         doc = {
             "schemaVersion": 1,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "benchmarkSha256": "23393a6cdc08e916cda15ed445fa3cb554113743eb363bbeac80487ec968a271",
+  "benchmarkSha256": "b0bfffe287c81e13798638d166cdbb2c968e07ebf0a28652ebf6566e052fe58a",
   "metrics": {
     "microF1": 1.0,
     "exactMatchRate": 1.0,
