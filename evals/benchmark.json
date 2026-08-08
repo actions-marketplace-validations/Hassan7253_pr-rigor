@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "PR Rigor labeled regression benchmark",
+  "description": "Synthetic, human-labeled pull-request scenarios for measuring deterministic finding quality and regression behavior. Labels describe intended PR Rigor behavior; they are not model-generated ground truth.",
+  "caseFiles": [
+    "cases/01-clean-docs-readme-to-missing-title.jsonl",
+    "cases/02-short-title-to-issue-link-present.jsonl",
+    "cases/03-skip-label-to-missing-tests-js.jsonl",
+    "cases/04-missing-tests-python-to-dependency-with-lockfile.jsonl",
+    "cases/05-manifest-without-lockfile-node-to-workflow-write-all.jsonl",
+    "cases/06-workflow-narrow-write-to-credential-private-key-path.jsonl",
+    "cases/07-secret-github-token-to-generated-heavy.jsonl",
+    "cases/08-binary-png-to-mixed-code-migration.jsonl"
+  ]
+}

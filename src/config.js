@@ -10,7 +10,7 @@ export const PATH_DEFAULTS = Object.freeze({
   ],
   tests: [
     '**/test/**', '**/tests/**', '**/__tests__/**', '**/spec/**',
-    '**/*_test.*', '**/*Test.*', '**/*.test.*', '**/*.spec.*'
+    '**/test_*.py', '**/*_test.*', '**/*Test.*', '**/*.test.*', '**/*.spec.*'
   ],
   docs: ['docs/**', '**/*.md', '**/*.mdx', 'README*', 'LICENSE*', 'CODE_OF_CONDUCT*'],
   changelog: ['CHANGELOG*', 'CHANGES*', 'NEWS*', '.changeset/**', 'changes/**'],

@@ -4,6 +4,8 @@ Roadmap items are proposals, not promises.
 
 ## Near term
 
+- Add independently sourced real-world evaluation fixtures as adopters report false positives and edge cases
+- Track benchmark history across releases without turning synthetic metrics into adoption claims
 - Ecosystem fixtures for Python, Rust, Go, Ruby, Java, and PHP
 - More precise manifest-to-lockfile relationships
 - SARIF validation fixtures and code-scanning documentation

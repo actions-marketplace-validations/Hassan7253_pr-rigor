@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "benchmarkSha256": "b0bfffe287c81e13798638d166cdbb2c968e07ebf0a28652ebf6566e052fe58a",
+  "metrics": {
+    "microF1": 1.0,
+    "exactMatchRate": 1.0,
+    "statusAccuracy": 1.0
+  },
+  "allowedRegression": {
+    "microF1": 0.005,
+    "exactMatchRate": 0.005,
+    "statusAccuracy": 0.005
+  },
+  "note": "Refresh only after reviewing benchmark-label or intended analyzer behavior changes."
+}

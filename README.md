@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/Hassan7253/pr-rigor/actions/workflows/ci.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/Hassan7253/pr-rigor/actions/workflows/codeql.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/codeql.yml)
+[![Eval Lab](https://github.com/Hassan7253/pr-rigor/actions/workflows/evals.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/evals.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Deterministic pull-request readiness and supply-chain checks for open-source maintainers.**
@@ -17,6 +18,7 @@ Linters answer “does this code follow a rule?” PR Rigor answers “is this c
 ## Highlights
 
 - 27 deterministic checks across reviewability, testing, security, supply chain, release readiness, and compatibility
+- Python Eval Lab with 71 labeled scenarios, precision/recall/F1, slice metrics, regression baselines, and a static dashboard
 - One stable GitHub comment that is updated instead of duplicated
 - GitHub step summary and file annotations
 - SARIF 2.1.0 output for code-scanning integrations
@@ -170,7 +172,13 @@ npm run check
 npm run test:coverage
 ```
 
-The runtime uses only Node.js built-ins. Tests use `node:test`.
+The runtime uses only Node.js built-ins. Tests use `node:test`. The optional development-only [Eval Lab](evals/README.md) uses Python standard-library tooling to benchmark the analyzer against a labeled scenario corpus.
+
+Run the system-level evaluation locally with:
+
+```bash
+python evals/run_evals.py --fail-on-regression
+```
 
 ## Project documents
 
@@ -183,6 +191,7 @@ The runtime uses only Node.js built-ins. Tests use `node:test`.
 - [Release process](docs/RELEASING.md)
 - [Open-source program application worksheet](docs/APPLICATIONS.md)
 - [Roadmap](docs/ROADMAP.md)
+- [Eval Lab](evals/README.md)
 
 ## Contributing
 
