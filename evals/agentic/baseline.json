@@ -1,0 +1,11 @@
+{
+  "case_scores": {
+    "json-config-threshold": 1.0,
+    "js-timeout-default": 1.0,
+    "policy-forbidden-secret": 1.0,
+    "preserve-unrelated-config": 1.0,
+    "python-retry-count": 1.0,
+    "readme-required-heading": 1.0
+  },
+  "note": "Known-good deterministic reference. The regression gate compares per-task mean grader scores against this committed baseline."
+}
