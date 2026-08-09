@@ -1,21 +1,34 @@
-﻿# PR Rigor
+# PR Rigor
 
 Deterministic pull-request quality gates and evaluation infrastructure for maintainers who want review evidence they can inspect, reproduce, and challenge.
 
-[![GitHub release](https://img.shields.io/github/v/release/Hassan7253/pr-rigor?display_name=tag&sort=semver)](https://github.com/Hassan7253/pr-rigor/releases)
-[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-PR%20Rigor-2ea44f?logo=github)](https://github.com/marketplace/actions/pr-rigor)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white)](package.json)
+PR Rigor began as a deterministic first-pass reviewer for pull requests. It now includes two evaluation labs built around a broader principle: if a system produces a score, the measurement system should itself be tested.
 
-PR Rigor started as a deterministic first-pass reviewer for pull requests. It now includes two evaluation labs that apply the same principle to the measurement system itself: if a tool produces a score, the score should earn trust through explicit cases, reproducible execution, failure analysis, and regression testing.
+The project asks three progressively harder questions:
+
+1. Is the pull request ready for serious review?
+2. Is the evaluator measuring that accurately?
+3. Can the evaluation distinguish robust behavior from benchmark or environment brittleness?
 
 ## Three layers of evidence
 
-| Layer | Question | What is measured |
-| --- | --- | --- |
-| **PR Rigor** | Is this pull request prepared for focused human review? | 27 deterministic checks across reviewability, testing, security-sensitive workflow changes, supply chain, release readiness, and compatibility |
-| **Eval Lab** | Does PR Rigor itself measure those signals accurately? | 71 labeled synthetic PR scenarios, precision/recall/F1, exact finding-set and status accuracy, slice metrics, latency, and corpus-bound regression baselines |
-| **Agentic Eval Lab** | Can an evaluation distinguish robust task behavior from benchmark or environment brittleness? | repeated trials, deterministic graders, irrelevant environment perturbations, uncertainty, failure taxonomy, environment consistency, and paired-bootstrap regression gating |
+### 1. PR Rigor
+
+Question: Is this pull request prepared for focused human review?
+
+Measures: 27 deterministic checks across reviewability, testing, security-sensitive workflow changes, supply chain, release readiness, and compatibility.
+
+### 2. Eval Lab
+
+Question: Does PR Rigor itself measure those signals accurately?
+
+Measures: 71 labeled synthetic PR scenarios with precision, recall, F1, exact finding-set accuracy, status accuracy, slice metrics, latency, and corpus-bound regression baselines.
+
+### 3. Agentic Eval Lab
+
+Question: Can an evaluation distinguish robust task behavior from benchmark or environment brittleness?
+
+Measures: repeated trials, deterministic graders, irrelevant environment perturbations, uncertainty, failure taxonomy, environment consistency, and paired-bootstrap regression gating.
 
 The common structure is:
 
@@ -31,13 +44,13 @@ system under test
 
 ## Agentic Eval Lab
 
-The development-only Agentic Eval Lab extends PR Rigor's evaluator-of-the-evaluator approach into small synthetic coding environments. Every episode starts from a fresh workspace, applies a controlled environment condition, runs a local agent command, and grades only observable outcomes with deterministic oracles.
+The development-only Agentic Eval Lab extends the evaluator-of-the-evaluator approach into small synthetic coding environments. Every episode starts from a fresh workspace, applies a controlled environment condition, runs a local agent command, and grades only observable outcomes with deterministic oracles.
 
 A built-in negative control compares a robust reference agent with a deliberately brittle reference that fails when a semantically irrelevant file appears. If the harness cannot distinguish those behaviors, the metric should not be trusted.
 
 The lab reports:
 
-- repeated-trial task success with 95% Wilson intervals
+- repeated-trial task success with 95% Wilson confidence intervals
 - grader-score variance and task-slice metrics
 - environment consistency under irrelevant workspace perturbations
 - separate task, agent, timeout, grader, and harness failure classes
@@ -77,19 +90,19 @@ jobs:
           token: ${{ github.token }}
 ```
 
-No checkout is required. The action reads pull-request metadata through GitHubÃ¢â‚¬â„¢s API and loads `.pr-rigor.json` from the **base commit**, not from untrusted pull-request code.
+No checkout is required. The action reads pull-request metadata through GitHub's API and loads `.pr-rigor.json` from the base commit, not from untrusted pull-request code.
 
-> Never add `actions/checkout` of a forkÃ¢â‚¬â„¢s head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
+> Never add `actions/checkout` of a fork's head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
 
 ## Example report
 
 ```text
 Status: FAIL  Score: 45/100
 
-Ã°Å¸â€ºâ€˜ New broad GitHub Actions write permissions were detected.
-Ã¢Å¡Â Ã¯Â¸Â Source changed without test changes.
-Ã¢Å¡Â Ã¯Â¸Â A dependency manifest changed.
-Ã¢Å¡Â Ã¯Â¸Â A migration or schema file changed.
+[FAIL] New broad GitHub Actions write permissions were detected.
+[WARN] Source changed without test changes.
+[WARN] A dependency manifest changed.
+[WARN] A migration or schema file changed.
 ```
 
 The Markdown report includes exact paths and a next step for each signal. See [the generated example](examples/generated-report.md).
@@ -171,7 +184,7 @@ Or from the Action:
     sarif-output: pr-rigor.sarif
 ```
 
-Uploading SARIF to GitHub code scanning requires the appropriate `security-events` permission and GitHub plan/repository support. The core Action does not require that permission.
+Uploading SARIF to GitHub code scanning requires the appropriate `security-events` permission and GitHub plan or repository support. The core Action does not require that permission.
 
 ## Maintainer waivers
 
@@ -195,19 +208,19 @@ npm run check
 npm run test:coverage
 ```
 
-The runtime uses only Node.js built-ins. Tests use `node:test`. The optional development-only [Eval Lab](evals/README.md) uses Python standard-library tooling to benchmark the analyzer against a labeled scenario corpus.
+The runtime uses only Node.js built-ins. Tests use `node:test`.
 
-Run the system-level evaluation locally with:
+### Running the Eval Lab
+
+The development-only [Eval Lab](evals/README.md) uses Python standard-library tooling to benchmark the analyzer against a labeled scenario corpus.
 
 ```bash
 python evals/run_evals.py --fail-on-regression
 ```
 
-## Agentic Eval Lab
+### Running the Agentic Eval Lab
 
-PR Rigor also includes a development-only, vendor-neutral coding-agent evaluation harness. It runs agents in fresh synthetic workspaces, grades observable outcomes with deterministic oracles, repeats trials, perturbs semantically irrelevant environment details, reports uncertainty and failure classes, and compares results against a committed baseline.
-
-The included robust and intentionally brittle reference agents act as positive and known-negative controls for the measurement system. The goal is to test whether the evaluation can distinguish genuine task robustness from benchmark or environment brittleness.
+Run the development-only agentic evaluation harness locally with:
 
 ```bash
 python -m unittest evals.agentic.test_agent_evals
@@ -219,19 +232,19 @@ python evals/agentic/run_agent_evals.py \
   --fail-on-regression
 ```
 
-See [Agentic Eval Lab](evals/agentic/README.md) and the [measurement methodology](docs/AGENTIC-EVALS.md).
+The included robust and deliberately brittle reference agents act as positive and known-negative controls for the measurement system.
+
 ## Project documents
 
-- [Upload and publish guide](docs/UPLOAD.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Security model](docs/SECURITY-MODEL.md)
 - [Rule reference](docs/RULES.md)
 - [Configuration](docs/CONFIGURATION.md)
-- [Adoption playbook](docs/ADOPTION.md)
-- [Release process](docs/RELEASING.md)
-- [Open-source program application worksheet](docs/APPLICATIONS.md)
-- [Roadmap](docs/ROADMAP.md)
 - [Eval Lab](evals/README.md)
+- [Agentic evaluation methodology](docs/AGENTIC-EVALS.md)
+- [Agentic Eval Lab guide](evals/agentic/README.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## Contributing
 
@@ -242,4 +255,5 @@ Real-world fixtures, language presets, clearer recovery guidance, and false-posi
 MIT
 
 ## Maintainer note
+
 PR Rigor is actively maintained, tested on its own pull requests, and open to community feedback.
