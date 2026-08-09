@@ -1,7 +1,29 @@
-# Changelog
+﻿# Changelog
 
 ## Unreleased
 
+## 1.2.0 - 2026-08-09
+
+### Added
+
+- Agentic Eval Lab for reproducible coding-agent evaluation in fresh synthetic workspaces
+- Deterministic graders, repeated trials, 95% Wilson confidence intervals, variance summaries, and task-slice metrics
+- Environment-consistency measurement using semantically irrelevant workspace perturbations
+- Explicit task, agent, timeout, grader, and harness failure taxonomy
+- Robust and deliberately brittle reference agents as controls for evaluator validation
+- Seeded paired-bootstrap regression gate against a committed per-task baseline
+- GitHub Actions `measurement-validation` workflow for the Agentic Eval Lab
+- Agentic evaluation methodology and limitations documentation
+
+### Changed
+
+- Expanded the project framing from a deterministic PR quality gate to a three-layer measurement stack: PR Rigor, Eval Lab, and Agentic Eval Lab
+- Refreshed the repository README so the evaluation research story is visible before implementation details
+
+### Notes
+
+- The Agentic Eval Lab corpus is synthetic and intentionally small. It demonstrates evaluation mechanics and robustness controls, not frontier-model accuracy or capability.
+- The core GitHub Action remains deterministic and does not send repository data to an external AI service.
 ## 1.1.0 - 2026-08-07
 
 ### Added

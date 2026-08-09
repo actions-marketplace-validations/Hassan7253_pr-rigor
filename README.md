@@ -1,34 +1,57 @@
-# PR Rigor
+﻿# PR Rigor
 
-[![CI](https://github.com/Hassan7253/pr-rigor/actions/workflows/ci.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/Hassan7253/pr-rigor/actions/workflows/codeql.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/codeql.yml)
-[![Eval Lab](https://github.com/Hassan7253/pr-rigor/actions/workflows/evals.yml/badge.svg)](https://github.com/Hassan7253/pr-rigor/actions/workflows/evals.yml)
+Deterministic pull-request quality gates and evaluation infrastructure for maintainers who want review evidence they can inspect, reproduce, and challenge.
+
+[![GitHub release](https://img.shields.io/github/v/release/Hassan7253/pr-rigor?display_name=tag&sort=semver)](https://github.com/Hassan7253/pr-rigor/releases)
+[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-PR%20Rigor-2ea44f?logo=github)](https://github.com/marketplace/actions/pr-rigor)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white)](package.json)
 
-**Deterministic pull-request readiness and supply-chain checks for open-source maintainers.**
+PR Rigor started as a deterministic first-pass reviewer for pull requests. It now includes two evaluation labs that apply the same principle to the measurement system itself: if a tool produces a score, the score should earn trust through explicit cases, reproducible execution, failure analysis, and regression testing.
 
-PR Rigor performs the repeatable first pass before a human review. It identifies missing context, absent tests, risky workflow permission changes, probable credential files, high-confidence secret patterns, unpinned third-party Actions, dependency changes, migrations, public API changes, generated-file noise, and oversized diffs.
+## Three layers of evidence
 
-It does **not** score contributors, guess whether code was AI-generated, automatically approve a pull request, or send repository data to an external model.
+| Layer | Question | What is measured |
+| --- | --- | --- |
+| **PR Rigor** | Is this pull request prepared for focused human review? | 27 deterministic checks across reviewability, testing, security-sensitive workflow changes, supply chain, release readiness, and compatibility |
+| **Eval Lab** | Does PR Rigor itself measure those signals accurately? | 71 labeled synthetic PR scenarios, precision/recall/F1, exact finding-set and status accuracy, slice metrics, latency, and corpus-bound regression baselines |
+| **Agentic Eval Lab** | Can an evaluation distinguish robust task behavior from benchmark or environment brittleness? | repeated trials, deterministic graders, irrelevant environment perturbations, uncertainty, failure taxonomy, environment consistency, and paired-bootstrap regression gating |
 
-## Why it is useful
+The common structure is:
 
-Linters answer â€œdoes this code follow a rule?â€ PR Rigor answers â€œis this change prepared for focused human review?â€ Every finding cites observable evidence and provides a recovery step. Repository maintainers keep final authority.
+```text
+system under test
+    -> observable behavior
+    -> labeled or deterministic cases
+    -> scoring
+    -> failure analysis
+    -> regression detection
+    -> trustworthy measurement
+```
 
-## Highlights
+## Agentic Eval Lab
 
-- 27 deterministic checks across reviewability, testing, security, supply chain, release readiness, and compatibility
-- Python Eval Lab with 71 labeled scenarios, precision/recall/F1, slice metrics, regression baselines, and a static dashboard
-- One stable GitHub comment that is updated instead of duplicated
-- GitHub step summary and file annotations
-- SARIF 2.1.0 output for code-scanning integrations
-- Local CLI for public or private GitHub pull requests
-- Four presets: `balanced`, `strict`, `library`, and `docs`
-- Maintainer-controlled waiver and skip labels
-- Configuration loaded from the trusted base commit
-- Blocking detection for unsafe `pull_request_target` checkout of pull-request-controlled code
-- Zero runtime dependencies on Node.js 20+
-- No telemetry, contributor profiling, or external AI service
+The development-only Agentic Eval Lab extends PR Rigor's evaluator-of-the-evaluator approach into small synthetic coding environments. Every episode starts from a fresh workspace, applies a controlled environment condition, runs a local agent command, and grades only observable outcomes with deterministic oracles.
+
+A built-in negative control compares a robust reference agent with a deliberately brittle reference that fails when a semantically irrelevant file appears. If the harness cannot distinguish those behaviors, the metric should not be trusted.
+
+The lab reports:
+
+- repeated-trial task success with 95% Wilson intervals
+- grader-score variance and task-slice metrics
+- environment consistency under irrelevant workspace perturbations
+- separate task, agent, timeout, grader, and harness failure classes
+- seeded paired-bootstrap comparison against a committed baseline
+
+The committed corpus is synthetic and intentionally small. It demonstrates evaluation mechanics, not frontier-model accuracy or capability.
+
+See [Agentic evaluation methodology](docs/AGENTIC-EVALS.md) and the [Agentic Eval Lab guide](evals/agentic/README.md).
+
+## Core Action
+
+The GitHub Action remains deterministic and dependency-light. It does not score contributors, guess whether code was AI-generated, automatically approve a pull request, send repository data to an external model, or add telemetry.
+
+Every finding is tied to observable repository evidence and a concrete recovery step. Maintainers keep final authority.
 
 ## Thirty-second installation
 
@@ -54,19 +77,19 @@ jobs:
           token: ${{ github.token }}
 ```
 
-No checkout is required. The action reads pull-request metadata through GitHubâ€™s API and loads `.pr-rigor.json` from the **base commit**, not from untrusted pull-request code.
+No checkout is required. The action reads pull-request metadata through GitHubÃ¢â‚¬â„¢s API and loads `.pr-rigor.json` from the **base commit**, not from untrusted pull-request code.
 
-> Never add `actions/checkout` of a forkâ€™s head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
+> Never add `actions/checkout` of a forkÃ¢â‚¬â„¢s head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
 
 ## Example report
 
 ```text
 Status: FAIL  Score: 45/100
 
-ðŸ›‘ New broad GitHub Actions write permissions were detected.
-âš ï¸ Source changed without test changes.
-âš ï¸ A dependency manifest changed.
-âš ï¸ A migration or schema file changed.
+Ã°Å¸â€ºâ€˜ New broad GitHub Actions write permissions were detected.
+Ã¢Å¡Â Ã¯Â¸Â Source changed without test changes.
+Ã¢Å¡Â Ã¯Â¸Â A dependency manifest changed.
+Ã¢Å¡Â Ã¯Â¸Â A migration or schema file changed.
 ```
 
 The Markdown report includes exact paths and a next step for each signal. See [the generated example](examples/generated-report.md).
