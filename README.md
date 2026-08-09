@@ -13,7 +13,7 @@ It does **not** score contributors, guess whether code was AI-generated, automat
 
 ## Why it is useful
 
-Linters answer “does this code follow a rule?” PR Rigor answers “is this change prepared for focused human review?” Every finding cites observable evidence and provides a recovery step. Repository maintainers keep final authority.
+Linters answer â€œdoes this code follow a rule?â€ PR Rigor answers â€œis this change prepared for focused human review?â€ Every finding cites observable evidence and provides a recovery step. Repository maintainers keep final authority.
 
 ## Highlights
 
@@ -54,19 +54,19 @@ jobs:
           token: ${{ github.token }}
 ```
 
-No checkout is required. The action reads pull-request metadata through GitHub’s API and loads `.pr-rigor.json` from the **base commit**, not from untrusted pull-request code.
+No checkout is required. The action reads pull-request metadata through GitHubâ€™s API and loads `.pr-rigor.json` from the **base commit**, not from untrusted pull-request code.
 
-> Never add `actions/checkout` of a fork’s head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
+> Never add `actions/checkout` of a forkâ€™s head commit to this `pull_request_target` job and never execute code from the pull request in it. See [the security model](docs/SECURITY-MODEL.md).
 
 ## Example report
 
 ```text
 Status: FAIL  Score: 45/100
 
-🛑 New broad GitHub Actions write permissions were detected.
-⚠️ Source changed without test changes.
-⚠️ A dependency manifest changed.
-⚠️ A migration or schema file changed.
+ðŸ›‘ New broad GitHub Actions write permissions were detected.
+âš ï¸ Source changed without test changes.
+âš ï¸ A dependency manifest changed.
+âš ï¸ A migration or schema file changed.
 ```
 
 The Markdown report includes exact paths and a next step for each signal. See [the generated example](examples/generated-report.md).
@@ -180,6 +180,23 @@ Run the system-level evaluation locally with:
 python evals/run_evals.py --fail-on-regression
 ```
 
+## Agentic Eval Lab
+
+PR Rigor also includes a development-only, vendor-neutral coding-agent evaluation harness. It runs agents in fresh synthetic workspaces, grades observable outcomes with deterministic oracles, repeats trials, perturbs semantically irrelevant environment details, reports uncertainty and failure classes, and compares results against a committed baseline.
+
+The included robust and intentionally brittle reference agents act as positive and known-negative controls for the measurement system. The goal is to test whether the evaluation can distinguish genuine task robustness from benchmark or environment brittleness.
+
+```bash
+python -m unittest evals.agentic.test_agent_evals
+python evals/agentic/run_agent_evals.py \
+  --agent "python evals/agentic/fixture_agent.py --profile robust" \
+  --repeat 3 \
+  --out evals/out/agentic \
+  --baseline evals/agentic/baseline.json \
+  --fail-on-regression
+```
+
+See [Agentic Eval Lab](evals/agentic/README.md) and the [measurement methodology](docs/AGENTIC-EVALS.md).
 ## Project documents
 
 - [Upload and publish guide](docs/UPLOAD.md)

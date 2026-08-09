@@ -1,0 +1,35 @@
+name: Agentic Eval Lab
+
+on:
+  pull_request:
+    paths:
+      - 'evals/agentic/**'
+      - 'docs/AGENTIC-EVALS.md'
+      - '.github/workflows/agentic-evals.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measurement-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Unit tests and known-negative control
+        run: python -m unittest -v evals.agentic.test_agent_evals
+      - name: Run repeated agentic evaluation and regression gate
+        run: |
+          python evals/agentic/run_agent_evals.py \
+            --agent "python evals/agentic/fixture_agent.py --profile robust" \
+            --repeat 3 \
+            --out evals/out/agentic \
+            --baseline evals/agentic/baseline.json \
+            --fail-on-regression
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agentic-eval-report
+          path: evals/out/agentic/**
