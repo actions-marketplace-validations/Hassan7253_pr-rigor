@@ -1,0 +1,73 @@
+name: Eval Lab
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  shard:
+    name: Eval shard ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - name: Test evaluation harness
+        if: matrix.shard == 0
+        run: python -m unittest evals.test_eval_harness
+      - name: Run labeled evaluation shard
+        run: >-
+          python evals/run_evals.py
+          --shard-index ${{ matrix.shard }}
+          --shard-count 4
+          --out-dir evals/out/shard-${{ matrix.shard }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: pr-rigor-eval-shard-${{ matrix.shard }}
+          path: evals/out/shard-${{ matrix.shard }}/results.json
+          if-no-files-found: error
+
+  aggregate:
+    name: Aggregate evals
+    needs: shard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: pr-rigor-eval-shard-*
+          path: evals/out/shards
+      - name: Aggregate and enforce regression baseline
+        run: >-
+          python evals/run_evals.py
+          --aggregate-dir evals/out/shards
+          --out-dir evals/out/aggregate
+          --fail-on-regression
+      - name: Add evaluation summary
+        run: cat evals/out/aggregate/report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: pr-rigor-eval-report
+          path: |
+            evals/out/aggregate/results.json
+            evals/out/aggregate/report.md
+            evals/out/aggregate/report.html
+          if-no-files-found: error

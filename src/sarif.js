@@ -43,7 +43,7 @@ export function renderSarif(report) {
       tool: {
         driver: {
           name: report.tool?.name || 'PR Rigor',
-          version: report.tool?.version || '1.0.0',
+          version: report.tool?.version || '1.1.0',
           informationUri: 'https://github.com/Hassan7253/pr-rigor',
           rules
         }
